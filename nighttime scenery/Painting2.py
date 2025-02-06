@@ -1,4 +1,5 @@
 import turtle
+import random
 ren=turtle.Turtle()
 window = turtle.Screen()
 WIN_width = 1280
@@ -8,16 +9,51 @@ ren.speed(0)
 turtle.bgcolor("gray")   
 ren.hideturtle()
 moon = turtle.Turtle()
+window.tracer(False)
 
-image = "pngtree-yellow-moon-png-image_7253691-removebg-preview.gif"
-window.addshape(image)
-moon.shape(image)
 
-moon.pu()
-moon.goto(-10,300)
-moon.pd()
+COLOR = (0.008, 0, 0.329)  # (154, 0, 254)
+TARGET = (0, 1, 1)  # (221, 122, 80)
 
-moon.stamp()
+deltas = [(hue - COLOR[index]) / WIN_height for index, hue in enumerate(TARGET)]
+
+turtle.color(COLOR)
+
+turtle.penup()
+turtle.goto(-WIN_width/2, WIN_height/2)
+turtle.pendown()
+
+direction = 1
+
+for distance, y in enumerate(range(WIN_height//2, -WIN_height//2, -1)):
+
+    turtle.forward(WIN_width * direction)
+    turtle.color([COLOR[i] + delta * distance for i, delta in enumerate(deltas)])
+    turtle.sety(y)
+
+    direction *= -1
+
+def stars(width, rotation):
+    ren.lt(rotation)
+    for i in range(5):
+        ren.forward(width)
+        ren.right(180-36)
+
+ren.color("white", "white")
+
+for b in range(50):
+    rotation = random.randint(0, 360)
+    width = random.randint(10, 80)
+    bird_w = random.randint(-640, 640)
+    bird_y = random.randint(40, 360)
+    ren.pu()
+    ren.goto(bird_w, bird_y)
+    ren.pd()
+    ren.begin_fill()
+    stars(width, rotation)
+    ren.end_fill()
+    ren.setheading(0)
+
 
 def jump(x, y):
     ren.pu()
@@ -84,7 +120,7 @@ def sky_scrapper():
 
 
 ren.setheading(0)
-ren.color("white", "black")
+ren.color("black", "black")
 jump(-640, -360)
 ren.begin_fill()
 tower(300,100)
@@ -123,5 +159,5 @@ turtle.onscreenclick(buttonclick,1)
 turtle.listen()  
 turtle.speed(10) 
 turtle.done() 
-
+window.tracer(False)
 window.mainloop()
